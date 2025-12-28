@@ -35,7 +35,7 @@ fastapi-realtime-tasks/
 │   │   ├── routes.py
 │   │   ├── schemas.py
 │   │   └── service.py
-│   ├── celery_task/    # Celery tasks
+│   ├── celery_task/    # Celery tasks 
 │   │   └── task.py
 │   ├── core/           # Core configurations, dependencies and security
 │   │   ├── config.py
