@@ -8,6 +8,7 @@ This is a FastAPI-based web application that provides real-time task management 
 - JWT-based security
 - Real-time task updates via WebSockets
 - Asynchronous MongoDB operations using Motor
+- Celery for background task processing
 - Docker and Docker Compose support
 - RESTful API endpoints
 
@@ -17,6 +18,8 @@ This is a FastAPI-based web application that provides real-time task management 
 - Python 3.13.3
 - MongoDB 7.0
 - Motor (Async MongoDB driver)
+- Celery (Background task processing)
+- Redis (Message broker and result backend)
 - WebSockets
 - Docker
 - Poetry (dependency management)
@@ -30,6 +33,8 @@ fastapi-realtime-tasks/
 │   │   ├── routes.py
 │   │   ├── schemas.py
 │   │   └── service.py
+│   ├── celery_task/    # Celery tasks
+│   │   └── task.py
 │   ├── core/           # Core configurations, dependencies and security
 │   │   ├── config.py
 │   │   ├── dependencies.py
@@ -48,6 +53,8 @@ fastapi-realtime-tasks/
 │   ├── websockets/     # WebSocket manager and router
 │   │   ├── manager.py
 │   │   └── router.py
+│   ├── worker/         # Celery worker configuration
+│   │   └── celer_worker.py
 │   └── main.py         # Application entry point
 ├── .env               # Environment variables
 ├── Dockerfile         # Docker configuration
@@ -87,6 +94,12 @@ The application uses Motor, an asynchronous MongoDB driver for Python, to connec
 docker-compose up --build
 ```
 
+This will start the following services:
+- FastAPI application on port 8000
+- MongoDB on port 27018 (for local access)
+- Redis on port 6380 (for Celery)
+- Celery worker for background tasks
+
 ### Without Docker
 
 1. Run like this ```poetry run uvicorn app.main:app```
@@ -95,12 +108,13 @@ The application will be available at `http://localhost:8000`
 
 ### Development
 
-The application exposes MongoDB on port 27017 for local access (in addition to the internal container network).
+The application exposes MongoDB on port 27018 and Redis on port 6380 for local access (in addition to the internal container network).
 
 ## API Endpoints
 
 - `POST /auth/register` - User registration
 - `POST /auth/login` - User login
+- `GET /auth/me` - Get current user details (authentication required)
 - `GET/POST/PUT/DELETE /tasks/` - Task management (authentication required)
 - `GET /websocket` - WebSocket endpoint for real-time updates
 
@@ -108,4 +122,27 @@ The application exposes MongoDB on port 27017 for local access (in addition to t
 
 - `Users` - Stores user information (email, password hash, name, role)
 - `Tasks` - Stores task information
+
+## Background Task Processing
+
+The application includes Celery for handling background tasks:
+
+- `app/celery_task/task.py` - Contains background task definitions
+- `app/worker/celer_worker.py` - Celery worker configuration
+- Uses Redis as both the message broker and result backend
+
+To run the Celery worker:
+
+```bash
+poetry run celery -A app.worker.celer_worker worker --loglevel=info -Q default_queue
+```
+
+## Environment Variables for Celery
+
+Add these variables to your `.env` file for Celery configuration:
+
+```bash
+CELERY_BROKER_URL=redis://localhost:6379/0
+CELERY_RESULT_BACKEND=redis://localhost:6379/0
+```
 
