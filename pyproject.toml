@@ -1,26 +1,32 @@
 [project]
 name = "new-pro"
 version = "0.1.0"
-description = ""
+description = "My FastAPI project"
 authors = [
-    {name = "ajesh128",email = "ajeshsreedhar03@gmail.com"}
+    {name = "ajesh128", email = "ajeshsreedhar03@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "fastapi (>=0.127.1,<0.128.0)",
-    "uvicorn (>=0.40.0,<0.41.0)",
+    "uvicorn[standard] (>=0.40.0,<0.41.0)",
     "pydantic[email] (>=2.12.5,<3.0.0)",
     "passlib[bcrypt] (>=1.7.4,<2.0.0)",
     "pydantic-settings (>=2.12.0,<3.0.0)",
     "motor (>=3.7.1,<4.0.0)",
     "python-jose[cryptography] (>=3.5.0,<4.0.0)",
     "argon2-cffi (>=25.1.0,<26.0.0)",
-    "python-multipart (>=0.0.21,<0.0.22)"
+    "python-multipart (>=0.0.21,<0.0.22)",
+    "celery (>=5.6.0,<6.0.0)",
+    "redis (>=7.1.0,<8.0.0)"
 ]
 
 [tool.poetry]
-packages = [{include = "app"}]
+name = "new-pro"
+version = "0.1.0"
+description = "My FastAPI project"
+authors = ["ajesh128 <ajeshsreedhar03@gmail.com>"]
+packages = [{ include = "app" }]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
