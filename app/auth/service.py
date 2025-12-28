@@ -64,8 +64,8 @@ class AuthService(object):
         return {"token": token, "jti": jti, "exp": expire}
     @staticmethod
     def create_access_token(subject: str, email: str, role: str) -> dict:
-        return AuthService.create_token(subject, email, role, timedelta(minutes=Config.ACCESS_TOKEN_EXPIRE_MINUTES), "access")
+        return AuthService.create_token(subject, email, role, timedelta(minutes=30), "access")
     
     @staticmethod
     def create_refresh_token(subject: str, email: str, role: str) -> dict:
-        return AuthService.create_token(subject, email, role, timedelta(days=Config.REFRESH_TOKEN_EXPIRE_DAYS), "refresh")
+        return AuthService.create_token(subject, email, role, timedelta(days=1), "refresh")
