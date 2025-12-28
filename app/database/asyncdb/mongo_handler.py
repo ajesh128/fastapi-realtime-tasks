@@ -60,3 +60,8 @@ class MongoDbHandler:
     async def find_one_and_delete(self, filter: dict):
         self._check_dict(filter)
         return await self.collection.find_one_and_delete(filter)
+    
+    async def find_one_and_update(self, filter: dict, update: dict,projection: dict = {"_id": 0}):
+        self._check_dict(filter, is_filter=True)
+        self._check_dict(update)
+        return await self.collection.find_one_and_update(filter, update,projection)

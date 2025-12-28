@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: fastapi-realtime-service
+    ports:
+      - "8000:5000"
+    env_file:
+      - .env
+    networks:
+      - fast-api-network
+
+  mongo:
+    image: mongo:7.0
+    container_name: mongo_service
+    restart: unless-stopped
+    ports:
+      - "27018:27017"   # Expose MongoDB to host
+    volumes:
+      - mongo-data:/data/db  # Persist database data
+    networks:
+      - fast-api-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - fast-api-network
+
+  celery_worker:
+    build: .
+    container_name: celery_worker
+    command: poetry run celery -A app.worker.celer_worker worker --loglevel=info -Q default_queue
+    depends_on:
+      - redis  # or whatever you're using as a broker
+    env_file:
+      - .env
+    networks:
+      - fast-api-network
+
+volumes:
+  mongo-data:
+
+networks:
+  fast-api-network:
+    driver: bridge
