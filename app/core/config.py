@@ -6,8 +6,6 @@ class Settings(BaseSettings):
     MONGO_URI: str
     JWT_SECRET_KEY: str 
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES:int
-    REFRESH_TOKEN_EXPIRE_DAYS:int
     BROKER_URL: str
     CELERY_RESULT_BACKEND: str
 
