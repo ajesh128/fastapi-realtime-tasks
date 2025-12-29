@@ -97,7 +97,7 @@ class TaskService:
     async def get_tasks(user_id: str | None = None) ->list:
         try:
             query = {"user_id": user_id} if user_id else {}
-            tasks = await Tasks().find(query)
+            tasks = await Tasks().find(query,projection={"_id": 1,"title":1,"description":1,"status":1,"created_at":1})
             if not tasks:
                 return []
 
