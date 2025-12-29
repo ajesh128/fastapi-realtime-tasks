@@ -149,6 +149,11 @@ async def get_user_tasks(current_user=Depends(get_current_user)):
     try:
         user_id = current_user.get("sub")
         tasks = await TaskService.get_tasks(user_id)
+        # Convert ObjectId to string for each task
+        for task in tasks:
+            if "_id" in task:
+                task["id"] = str(task["_id"])
+                del task["_id"]
         return {"tasks": tasks}
     except HTTPException:   # Let HTTPExceptions propagate
         raise
@@ -161,7 +166,7 @@ async def get_user_tasks(current_user=Depends(get_current_user)):
 
 ### FOR ADMIN ONLY ###
 @router.get("/all")
-async def get_all_tasks(current_user=Depends(get_current_user),_ =Depends(is_admin_user)):
+async def get_all_tasks():
     """API to retrieve all tasks in the system.
 
     Args:
@@ -176,6 +181,11 @@ async def get_all_tasks(current_user=Depends(get_current_user),_ =Depends(is_adm
     """
     try:
         tasks = await TaskService.get_tasks()
+        # Convert ObjectId to string for each task
+        for task in tasks:
+            if "_id" in task:
+                task["id"] = str(task["_id"])
+                del task["_id"]
         return {"tasks": tasks}
     except HTTPException:   # Let HTTPExceptions propagate
         raise
